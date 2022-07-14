@@ -18,7 +18,7 @@ const Register = () => {
                     <Divider>Or</Divider>
                     <Box sx={{textAlign: "center"}} >
                         <Link to="/login" style={{textDecoration: "none"}}>
-                            <Button link variant={"text"}>Login here</Button>
+                            <Button variant={"text"}>Login here</Button>
                         </Link>
                     </Box>
                 </form>

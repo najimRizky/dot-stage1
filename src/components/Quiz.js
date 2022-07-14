@@ -8,14 +8,19 @@ const Quiz = () => {
     const [answers, setAnswer] = useState({})
     const [result, setResult] = useState(null)
     const getQuestion = () => {
-        axios.get('https://opentdb.com/api.php?amount=10&type=boolean&category=18')
-        .then((results) => {
-            console.log(results.data.results)
-            setQuestion(results.data.results)
+        axios.get('https://opentdb.com/api.php?amount=30&type=boolean&category=18&token=e90ff97ac47f5fe57f8d58b671f2112131cac10c1d1e3282213b574b24b70e72')
+        .then((resp) => {
+            console.log(resp)
+            setQuestion(resp.data.results)
         })
         .catch((err) => {
             console.log(err)
         })
+
+        // axios.get("https://opentdb.com/api_token.php?command=request")
+        // .then((resp) => {
+        //     // console.log(resp)
+        // })
     }
 
     // Run Once on first render

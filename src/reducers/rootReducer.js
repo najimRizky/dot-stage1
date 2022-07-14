@@ -3,6 +3,12 @@ const initState = {
 }
 
 const rootReducer = (state = initState, action) => {
+    if(action.type === "SET_USER"){
+        return {
+            ...state,
+            user: action.user
+        }
+    }
     return state;
 }
 

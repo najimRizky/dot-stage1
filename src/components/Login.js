@@ -19,7 +19,7 @@ const Login = ({user, setUser}) => {
     return (
         <Container sx={{display: "flex", justifyContent: "center", alignItems: "center", height: "100vh"}}>
             {!user ? (
-                <Box sx={{minWidth: "300px", width: "40vw", bgcolor: "#fbfbfb", p: "20px"}}>
+                <Box sx={{borderRadius: "10px",minWidth: "300px", width: "40vw", bgcolor: "#fbfbfb", p: "20px"}}>
                 <Typography variant={"h2"} fontWeight={"bold"} fontSize={"28px"} textAlign={"center"}>Login</Typography>
                 <form onSubmit={login} className="form">
                     <TextField name="email" required sx={{my: "8px"}} fullWidth type={"email"} label="Email" variant="standard" />

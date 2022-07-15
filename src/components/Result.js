@@ -6,7 +6,9 @@ import { Link } from "react-router-dom";
 const Result = ({ questions, answers, result }) => {
     return (
         <Container sx={{width: "85vw", background: "white", my: "40px", borderRadius: "20px"}}>
-            <Typography mt="12px" textAlign={"center"} variant="h5">Score : {result.correct}/{result.correct + result.wrong}</Typography>
+            <Typography mt="12px" textAlign={"center"} variant="h5">
+                Score : {result.correct}/{result.correct + result.wrong} - correct: {result.correct} - wrong: {result.wrong}
+            </Typography>
             <ol>
                 {questions.map((question, i) =>
                     <li key={i} style={{color: result.details[i] ? "green" : "red"}}>

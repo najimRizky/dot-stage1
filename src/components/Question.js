@@ -9,7 +9,7 @@ const Question = ({ data, i , action, answer}) => {
     const submitQuestion = (value) => {
         action.addAnswers(i, value)
         setCurrAnswer(value)
-        // action.nextQuestion()
+        action.nextQuestion()
     }
 
     const clearCurrentAnswer = () => {

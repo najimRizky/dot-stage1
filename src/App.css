@@ -3,3 +3,7 @@ body{
     background: linear-gradient(209deg, rgba(0,67,255,1) 0%, rgba(0,169,160,1) 100%);
     background-size: cover;
 }
+
+.Mui-disabled{
+    color: rgba(0,0,0,0.5) !important
+}

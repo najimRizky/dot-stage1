@@ -7,6 +7,7 @@ import { connect } from "react-redux";
 import Question from "./Question";
 import { Navigate } from "react-router-dom";
 import QuestionNav from "./QuestionNav";
+import Result from "./Result";
 
 
 const Quiz = ({user}) => {
@@ -14,8 +15,9 @@ const Quiz = ({user}) => {
     const [answers, setAnswers] = useState({})
     const [result, setResult] = useState(null)
     const [activeQuestion, setActiveQuestion] = useState(0)
-    const [timer, setTimer] = useState(Date.now() + (1000 * 30 * 60)) // (1000 x minutes x second)
-    // const [timer, setTimer] = useState(Date.now() + (2))
+    const [timer, setTimer] = useState(Date.now() + (1000 * 1 * 5)) // (1000 x minutes x second)
+    const [finish, setFinish] = useState(false)
+
     const countdownTimer = useRef()
 
     const getQuestion = () => {
@@ -88,6 +90,7 @@ const Quiz = ({user}) => {
     }
 
     const checkAnswer = () => {
+        setFinish(true)
         let resultTmp = {
             correct: 0,
             wrong: 0,
@@ -102,55 +105,32 @@ const Quiz = ({user}) => {
                 resultTmp["wrong"]++
             }
         })
-        // setResult(resultTmp)
+        setResult(resultTmp)
     }
 
 
     
 
     return (
-        <Box height={"100vh"} display={"flex"} flexDirection={"column"} justifyContent={"center"} alignItems={"center"}>
-            <Box mb={"10px"} fontSize={"24px"} color={"white"} >
-                Time remaining: <Countdown ref={countdownTimer} date={timer} onComplete={checkAnswer} />
-            </Box>
-            
-            {questions === null ? (<Box sx={{display: "flex", justifyContent: "center"}}><CircularProgress/></Box>) : (
-                <>
-                    <Question data={questions[activeQuestion]} i={activeQuestion} answer={answers[activeQuestion]} action={{nextQuestion, prevQuestion, addAnswers, deleteAnswers}}/>
-                    <QuestionNav goToQuestion={goToQuestion} answers={answers} active={activeQuestion} total={questions.length}/>
-                </>
-            )}
+        <Box height={!finish ? "100vh" : "fit-content"} display={"flex"} flexDirection={"column"} justifyContent={"center"} alignItems={"center"}>
+            {!finish && 
+                <Box mb={"10px"} fontSize={"24px"} color={"white"} >
+                    Time remaining: <Countdown ref={countdownTimer} date={timer} onComplete={checkAnswer} />
+                </Box>
+            }
+            {questions === null ? (
+                <Box sx={{display: "flex", justifyContent: "center"}}><CircularProgress/></Box>
+                ) : !finish ? (
+                    <>
+                        <Question data={questions[activeQuestion]} i={activeQuestion} answer={answers[activeQuestion]} action={{nextQuestion, prevQuestion, addAnswers, deleteAnswers}}/>
+                        <QuestionNav goToQuestion={goToQuestion} answers={answers} active={activeQuestion} total={questions.length}/>
+                    </>
+                ) : (
+                    <Result questions={questions} answers={answers} result={result} />
+                )
+            }
         </Box>
-        // <Container sx={{background: "white"}}>
-        //     <h1>Quiz</h1>
-        //         {questions === null ? (<Box sx={{display: "flex", justifyContent: "center"}}><CircularProgress/></Box>) : (
-        //             <>
-        //                 <ol>
-        //                     {questions.map((question, i) => 
-        //                         <li key={i}>
-        //                             <p dangerouslySetInnerHTML={{ __html: question.question }} />
-        //                             <RadioGroup
-        //                                 aria-labelledby="demo-radio-buttons-group-label"
-        //                                 defaultValue=""
-        //                                 name={`question ${i}`}
-        //                                 onChange={(e) => handleChange(i, e.target.value)}
-        //                             >   
-        //                                 <FormControlLabel value="True" control={<Radio />} label="True" />
-        //                                 <FormControlLabel value="False" control={<Radio />} label="False" />
-        //                             </RadioGroup>
-        //                         </li>
-        //                     )}
-        //                 </ol>
-        //                 {result !== null && (
-        //                     <>
-        //                         <p>Correct Answers: {result.correct}</p>
-        //                         <p>Wrong Answers: {result.wrong}</p>
-        //                     </>
-        //                 )}
-        //                 <Button variant="contained" onClick={checkAnswer}>Submit</Button>
-        //             </>
-        //         )}
-        // </Container>
+        
     )
 }
 

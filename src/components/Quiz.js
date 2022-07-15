@@ -2,57 +2,60 @@ import { CircularProgress, FormControlLabel, Radio, RadioGroup, Button } from "@
 import { Box, Container } from "@mui/system";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { connect } from "react-redux";
+import Question from "./Question";
 
-
-const Quiz = () => {
+const Quiz = ({user}) => {
     const [questions, setQuestion] = useState(null)
-    const [answers, setAnswer] = useState({})
+    const [answers, setAnswers] = useState({})
     const [result, setResult] = useState(null)
-    
-    let token = "ead7ce7206e423e3c7b4f28f79e5642e22135c43f8182cef24a5ec2fdbeb7856"
+    const [activeQuestion, setActiveQuestion] = useState(0)
 
     const getQuestion = () => {
-        axios.get('https://opentdb.com/api.php?amount=30&type=boolean&category=18&token=' + token)
-        .then((resp) => {
-            console.log(resp)
-            switch(resp.data.response_code){
-                case 0: 
-                    setQuestion(resp.data.results)
-                break
-                case 3: 
-                    axios.get("https://opentdb.com/api_token.php?command=request")
-                    .then((resp) => {
-                        token = resp.data.token
-                        getQuestion()
-                    })
-                break
-                case 4: 
-                    axios.get("https://opentdb.com/api_token.php?command=reset&token=" + token)
-                    .then(() => {
-                        getQuestion()
-                    })
-                break
-                default: throw new Error("Something went wrong")
-            }
-        })
-        .catch((err) => {
-            console.log(err)
-        })
-
-        
+        const localDataQuiz = JSON.parse(window.localStorage.getItem("quizzes"))
+        const currentUser = localDataQuiz !== null ? localDataQuiz.find(quiz => quiz.user.email === user.email) : undefined
+        if(currentUser === undefined){
+            axios.get('https://opentdb.com/api.php?&amount=15&type=boolean')
+            .then((resp) => {
+                setQuestion(resp.data.results)
+                const newLocalDataQuiz = localDataQuiz !== null ? [
+                    ...localDataQuiz,
+                    {
+                    user: user,
+                    quiz: { questions : resp.data.results, }
+                }] : [{
+                        user: user,
+                        quiz: { questions : resp.data.results, }
+                }]
+                window.localStorage.setItem("quizzes", JSON.stringify(newLocalDataQuiz))
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+        }else{
+            setQuestion(currentUser.quiz.questions)
+        }
     }
 
-    // Run Once on first render
     useEffect(() => {
         getQuestion()
+        // eslint-disable-next-line
     }, [])
 
     useEffect(() => {
         // console.log(answers)
     }, [answers])
 
-    const handleChange = (i, value) => {
-        setAnswer({...answers, [i]: value})
+    const updateAnswers = (i, value) => {
+        setAnswers({...answers, [i]: value})
+    }
+
+    const nextQuestion = () => {
+        setActiveQuestion(activeQuestion+1)
+    }
+
+    const prevQuestion = () => {
+        setActiveQuestion(activeQuestion-1)
     }
 
     const checkAnswer = () => {
@@ -75,37 +78,48 @@ const Quiz = () => {
     }
 
     return (
-        <Container sx={{background: "white"}}>
-            <h1>Quiz</h1>
-                {questions === null ? (<Box sx={{display: "flex", justifyContent: "center"}}><CircularProgress/></Box>) : (
-                    <>
-                        <ol>
-                            {questions.map((question, i) => 
-                                <li key={i}>
-                                    <p dangerouslySetInnerHTML={{ __html: question.question }} />
-                                    <RadioGroup
-                                        aria-labelledby="demo-radio-buttons-group-label"
-                                        defaultValue=""
-                                        name={`question ${i}`}
-                                        onChange={(e) => handleChange(i, e.target.value)}
-                                    >   
-                                        <FormControlLabel value="True" control={<Radio />} label="True" />
-                                        <FormControlLabel value="False" control={<Radio />} label="False" />
-                                    </RadioGroup>
-                                </li>
-                            )}
-                        </ol>
-                        {result !== null && (
-                            <>
-                                <p>Correct Answers: {result.correct}</p>
-                                <p>Wrong Answers: {result.wrong}</p>
-                            </>
-                        )}
-                        <Button variant="contained" onClick={checkAnswer}>Submit</Button>
-                    </>
-                )}
-        </Container>
+        <Box height={"100vh"} display={"flex"} justifyContent={"center"} alignItems={"center"}>
+            {questions === null ? (<Box sx={{display: "flex", justifyContent: "center"}}><CircularProgress/></Box>) : (
+                <Question data={questions[activeQuestion]} i={activeQuestion} updateAnswers={updateAnswers} action={{nextQuestion, prevQuestion}}/>
+            )}
+        </Box>
+        // <Container sx={{background: "white"}}>
+        //     <h1>Quiz</h1>
+        //         {questions === null ? (<Box sx={{display: "flex", justifyContent: "center"}}><CircularProgress/></Box>) : (
+        //             <>
+        //                 <ol>
+        //                     {questions.map((question, i) => 
+        //                         <li key={i}>
+        //                             <p dangerouslySetInnerHTML={{ __html: question.question }} />
+        //                             <RadioGroup
+        //                                 aria-labelledby="demo-radio-buttons-group-label"
+        //                                 defaultValue=""
+        //                                 name={`question ${i}`}
+        //                                 onChange={(e) => handleChange(i, e.target.value)}
+        //                             >   
+        //                                 <FormControlLabel value="True" control={<Radio />} label="True" />
+        //                                 <FormControlLabel value="False" control={<Radio />} label="False" />
+        //                             </RadioGroup>
+        //                         </li>
+        //                     )}
+        //                 </ol>
+        //                 {result !== null && (
+        //                     <>
+        //                         <p>Correct Answers: {result.correct}</p>
+        //                         <p>Wrong Answers: {result.wrong}</p>
+        //                     </>
+        //                 )}
+        //                 <Button variant="contained" onClick={checkAnswer}>Submit</Button>
+        //             </>
+        //         )}
+        // </Container>
     )
 }
 
-export default Quiz;
+const mapStateToProps = (state) => {
+    return{
+        user: state.user
+    }
+}
+
+export default connect(mapStateToProps)(Quiz);

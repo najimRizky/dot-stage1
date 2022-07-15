@@ -8,7 +8,7 @@ const Question = ({ data, i , action, answer}) => {
 
     const submitQuestion = () => {
         action.addAnswers(i, currAnswer)
-        action.nextQuestion()
+        // action.nextQuestion()
     }
 
     const clearCurrentAnswer = () => {
@@ -49,6 +49,9 @@ const Question = ({ data, i , action, answer}) => {
                     <Box mt={"20px"}>
                         <Button disabled={currAnswer === "" ? true : false} variant="contained" onClick={submitQuestion} >Submit</Button>
                         <Button disabled={currAnswer === "" ? true : false} onClick={clearCurrentAnswer} variant="text" >Clear Answer</Button>
+                        {i === 14 && 
+                            <Button color='success' sx={{float: "right"}} onClick={action.goToResult} variant="contained" >Finish Quiz</Button>
+                        }
                     </Box>
 
                 </Container>

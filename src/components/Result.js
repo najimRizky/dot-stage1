@@ -1,4 +1,7 @@
-import { Container, Radio, RadioGroup, FormControlLabel, Typography } from "@mui/material";
+import { Container, Radio, RadioGroup, FormControlLabel, Typography, Button } from "@mui/material";
+import { Box } from "@mui/system";
+import { Link } from "react-router-dom";
+
 
 const Result = ({ questions, answers, result }) => {
     return (
@@ -20,12 +23,11 @@ const Result = ({ questions, answers, result }) => {
                     </li>
                 )}
             </ol>
-            {/* {result !== null && (
-                        <>
-                            <p>Correct Answers: {result.correct}</p>
-                            <p>Wrong Answers: {result.wrong}</p>
-                        </>
-                    )} */}
+            <Box mb={"20px"}>
+                <Link to="/" style={{textDecoration: "none"}}>
+                    <Button fullWidth variant={"contained"} >Retake Quiz</Button>
+                </Link>
+            </Box>
         </Container>
     );
 }

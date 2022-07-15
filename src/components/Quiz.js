@@ -15,7 +15,7 @@ const Quiz = ({user}) => {
     const [answers, setAnswers] = useState({})
     const [result, setResult] = useState(null)
     const [activeQuestion, setActiveQuestion] = useState(0)
-    const [timer, setTimer] = useState(Date.now() + (1000 * 1 * 5)) // (1000 x minutes x second)
+    const [timer, setTimer] = useState(Date.now() + (1000 * 15 * 60)) // (1000 x minutes x second)
     const [finish, setFinish] = useState(false)
 
     const countdownTimer = useRef()
@@ -132,7 +132,7 @@ const Quiz = ({user}) => {
                 <Box sx={{display: "flex", justifyContent: "center"}}><CircularProgress/></Box>
                 ) : !finish ? (
                     <>
-                        <Question data={questions[activeQuestion]} i={activeQuestion} answer={answers[activeQuestion]} action={{nextQuestion, prevQuestion, addAnswers, deleteAnswers}}/>
+                        <Question data={questions[activeQuestion]} i={activeQuestion} answer={answers[activeQuestion]} action={{nextQuestion, prevQuestion, addAnswers, deleteAnswers, goToResult}}/>
                         <QuestionNav goToQuestion={goToQuestion} answers={answers} active={activeQuestion} total={questions.length}/>
                     </>
                 ) : (

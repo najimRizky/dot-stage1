@@ -9,7 +9,7 @@ const Home = ({user}) => {
         <Container sx={{display: "flex", justifyContent: "center", alignItems: "center", height: "100vh"}}>
             {user ? (
                 <Box sx={{borderRadius: "10px", textAlign: "center",minWidth: "300px", width: "40vw", bgcolor: "#fbfbfb", p: "20px"}}>
-                    <Typography mb={2}>Are you ready to take the quiz?</Typography>
+                    <Typography mb={2}>Hi, {user.name}! Are you ready to take the quiz?</Typography>
                     <Link style={{textDecoration: "none"}} to="/quiz"><Button variant="contained">Start Quiz</Button></Link>
                 </Box>
             ) : (

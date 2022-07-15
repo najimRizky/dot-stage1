@@ -43,7 +43,7 @@ const Quiz = ({user}) => {
     }, [])
 
     useEffect(() => {
-        // console.log(answers)
+        console.log(answers)
     }, [answers])
 
     const updateAnswers = (i, value) => {
@@ -80,7 +80,7 @@ const Quiz = ({user}) => {
     return (
         <Box height={"100vh"} display={"flex"} justifyContent={"center"} alignItems={"center"}>
             {questions === null ? (<Box sx={{display: "flex", justifyContent: "center"}}><CircularProgress/></Box>) : (
-                <Question data={questions[activeQuestion]} i={activeQuestion} updateAnswers={updateAnswers} action={{nextQuestion, prevQuestion}}/>
+                <Question data={questions[activeQuestion]} i={activeQuestion} answer={answers[activeQuestion]} action={{nextQuestion, prevQuestion, updateAnswers}}/>
             )}
         </Box>
         // <Container sx={{background: "white"}}>

@@ -3,17 +3,17 @@ import { Button, Container, FormControlLabel, IconButton, Radio, RadioGroup, Typ
 import { Box } from "@mui/system";
 import { useEffect, useState } from 'react';
 
-const Question = ({ data, i , updateAnswers, action}) => {
-    const [answer, setAnswer] = useState("")
+const Question = ({ data, i , action, answer}) => {
+    const [currAnswer, setCurrAnswer] = useState("")
 
     const submitQuestion = () => {
-        updateAnswers(i, answer)
+        action.updateAnswers(i, currAnswer)
         action.nextQuestion()
     }
 
     useEffect(() => {
         console.log(data)
-        setAnswer("")
+        setCurrAnswer(answer === undefined ? "" : answer)
     }, [data])
 
     return (
@@ -34,16 +34,16 @@ const Question = ({ data, i , updateAnswers, action}) => {
                     <Typography fontSize={"24px"} marginBottom={"20px"} dangerouslySetInnerHTML={{ __html: data.question }} />
                     <RadioGroup
                         aria-labelledby="demo-radio-buttons-group-label"
-                        value={answer}
+                        value={currAnswer}
                         name={`question ${i}`}
-                        onChange={(e) => setAnswer(e.target.value)}
+                        onChange={(e) => setCurrAnswer(e.target.value)}
                     >
                         <FormControlLabel value="True" control={<Radio />} label={<Typography fontSize={"24px"}> True </Typography>} />
                         <FormControlLabel value="False" control={<Radio />} label={<Typography fontSize={"24px"}> False </Typography>} />
                     </RadioGroup>
                     <Box mt={"20px"}>
-                        <Button disabled={answer === "" ? true : false} variant="contained" onClick={submitQuestion} >Submit</Button>
-                        <Button disabled={answer === "" ? true : false} onClick={() => setAnswer("")} variant="text" >Clear Answer</Button>
+                        <Button disabled={currAnswer === "" ? true : false} variant="contained" onClick={submitQuestion} >Submit</Button>
+                        <Button disabled={currAnswer === "" ? true : false} onClick={() => setCurrAnswer("")} variant="text" >Clear Answer</Button>
                     </Box>
 
                 </Container>

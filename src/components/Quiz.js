@@ -65,6 +65,7 @@ const Quiz = ({ user }) => {
             const tmpData = paused.find(data => data.email === user.email)
             if(tmpData){
                 setTimer(+Date.now() + Number(tmpData.paused))
+                setAnswers(tmpData.answer)
             }else{
                 setTimer(+Date.now() + (1000 * 5 * 60))
             }

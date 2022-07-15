@@ -6,8 +6,9 @@ import { useEffect, useState } from 'react';
 const Question = ({ data, i , action, answer}) => {
     const [currAnswer, setCurrAnswer] = useState("")
 
-    const submitQuestion = () => {
-        action.addAnswers(i, currAnswer)
+    const submitQuestion = (value) => {
+        action.addAnswers(i, value)
+        setCurrAnswer(value)
         // action.nextQuestion()
     }
 
@@ -41,13 +42,13 @@ const Question = ({ data, i , action, answer}) => {
                         aria-labelledby="demo-radio-buttons-group-label"
                         value={currAnswer}
                         name={`question ${i}`}
-                        onChange={(e) => setCurrAnswer(e.target.value)}
+                        onChange={(e) => submitQuestion(e.target.value)}
                     >
                         <FormControlLabel value="True" control={<Radio />} label={<Typography fontSize={"24px"}> True </Typography>} />
                         <FormControlLabel value="False" control={<Radio />} label={<Typography fontSize={"24px"}> False </Typography>} />
                     </RadioGroup>
                     <Box mt={"20px"}>
-                        <Button disabled={currAnswer === "" ? true : false} variant="contained" onClick={submitQuestion} >Submit</Button>
+                        {/* <Button disabled={currAnswer === "" ? true : false} variant="contained" onClick={submitQuestion} >Submit</Button> */}
                         <Button disabled={currAnswer === "" ? true : false} onClick={clearCurrentAnswer} variant="text" >Clear Answer</Button>
                         {i === 14 && 
                             <Button color='success' sx={{float: "right"}} onClick={action.goToResult} variant="contained" >Finish Quiz</Button>

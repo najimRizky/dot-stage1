@@ -48,6 +48,7 @@ const Quiz = ({user}) => {
 
 
     useEffect(() => {
+        if(!user) window.location = "/login"
         getQuestion()
         // if(window.localStorage.getItem("timeRemain") !== null){
         //     setTimer(Number(window.localStorage.getItem("timeRemain")) + (1000 * 30 * 60))
@@ -123,22 +124,29 @@ const Quiz = ({user}) => {
 
     return (
         <Box height={!finish ? "100vh" : "fit-content"} display={"flex"} flexDirection={"column"} justifyContent={"center"} alignItems={"center"}>
-            {!finish && 
-                <Box mb={"10px"} fontSize={"24px"} color={"white"} >
-                    Time remaining: <Countdown ref={countdownTimer} date={timer} onComplete={goToResult} />
-                </Box>
-            }
-            {questions === null ? (
-                <Box sx={{display: "flex", justifyContent: "center"}}><CircularProgress/></Box>
-                ) : !finish ? (
-                    <>
-                        <Question data={questions[activeQuestion]} i={activeQuestion} answer={answers[activeQuestion]} action={{nextQuestion, prevQuestion, addAnswers, deleteAnswers, goToResult}}/>
-                        <QuestionNav goToQuestion={goToQuestion} answers={answers} active={activeQuestion} total={questions.length}/>
-                    </>
-                ) : (
-                    <Result questions={questions} answers={answers} result={result} />
-                )
-            }
+            {user ? (
+                <>
+                    {!finish && 
+                        <Box mb={"10px"} fontSize={"24px"} color={"white"} >
+                            Time remaining: <Countdown ref={countdownTimer} date={timer} onComplete={goToResult} />
+                        </Box>
+                    }
+                    {questions === null ? (
+                        <Box sx={{display: "flex", justifyContent: "center"}}><CircularProgress/></Box>
+                        ) : !finish ? (
+                            <>
+                                <Question data={questions[activeQuestion]} i={activeQuestion} answer={answers[activeQuestion]} action={{nextQuestion, prevQuestion, addAnswers, deleteAnswers, goToResult}}/>
+                                <QuestionNav goToQuestion={goToQuestion} answers={answers} active={activeQuestion} total={questions.length}/>
+                            </>
+                        ) : (
+                            <Result questions={questions} answers={answers} result={result} />
+                        )
+                    }
+                    
+                </>
+            ) : (
+                <Navigate to="/login" replace={true} />
+            )}
         </Box>
         
     )

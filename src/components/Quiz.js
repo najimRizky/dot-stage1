@@ -89,8 +89,18 @@ const Quiz = ({user}) => {
             setActiveQuestion(i)
     }
 
-    const checkAnswer = () => {
+    const goToResult = () => {
         setFinish(true)
+        checkAnswer()
+        emptyLocalStorage()
+    }
+
+    const emptyLocalStorage = () => {
+        let tmp = JSON.parse(window.localStorage.getItem("quizzes")).filter(quiz => {return quiz.user.email !== user.email})
+        window.localStorage.setItem("quizzes", JSON.stringify(tmp))        
+    }
+
+    const checkAnswer = () => {
         let resultTmp = {
             correct: 0,
             wrong: 0,
@@ -115,7 +125,7 @@ const Quiz = ({user}) => {
         <Box height={!finish ? "100vh" : "fit-content"} display={"flex"} flexDirection={"column"} justifyContent={"center"} alignItems={"center"}>
             {!finish && 
                 <Box mb={"10px"} fontSize={"24px"} color={"white"} >
-                    Time remaining: <Countdown ref={countdownTimer} date={timer} onComplete={checkAnswer} />
+                    Time remaining: <Countdown ref={countdownTimer} date={timer} onComplete={goToResult} />
                 </Box>
             }
             {questions === null ? (

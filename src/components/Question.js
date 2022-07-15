@@ -20,6 +20,7 @@ const Question = ({ data, i , action, answer}) => {
     useEffect(() => {
         // console.log(data)
         setCurrAnswer(answer === undefined ? "" : answer)
+        // eslint-disable-next-line
     }, [data])
 
     return (

@@ -60,14 +60,14 @@ const Quiz = ({ user }) => {
     const determineTimer = () => {
         const paused =  JSON.parse(window.localStorage.getItem("paused"))
         if(paused === null){
-            setTimer(Date.now() +  (1000 * 5 * 60))
+            setTimer(Date.now() +  (1000 * 1 * 60))
         }else{
             const tmpData = paused.find(data => data.email === user.email)
             if(tmpData){
                 setTimer(+Date.now() + Number(tmpData.paused))
                 setAnswers(tmpData.answer)
             }else{
-                setTimer(+Date.now() + (1000 * 5 * 60))
+                setTimer(+Date.now() + (1000 * 1 * 60))
             }
         }
     }

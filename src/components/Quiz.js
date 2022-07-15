@@ -1,15 +1,21 @@
-import { CircularProgress, FormControlLabel, Radio, RadioGroup, Button } from "@mui/material";
-import { Box, Container } from "@mui/system";
+import { CircularProgress } from "@mui/material";
+import { Box} from "@mui/system";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import Countdown, {calcTimeDelta} from "react-countdown";
 import { connect } from "react-redux";
 import Question from "./Question";
+import { Navigate } from "react-router-dom";
+
 
 const Quiz = ({user}) => {
     const [questions, setQuestion] = useState(null)
     const [answers, setAnswers] = useState({})
     const [result, setResult] = useState(null)
     const [activeQuestion, setActiveQuestion] = useState(0)
+    const [timer, setTimer] = useState(Date.now() + (1000 * 30 * 60)) // (1000 x minutes x second)
+    // const [timer, setTimer] = useState(Date.now() + (2))
+    const countdownTimer = useRef()
 
     const getQuestion = () => {
         const localDataQuiz = JSON.parse(window.localStorage.getItem("quizzes"))
@@ -37,13 +43,24 @@ const Quiz = ({user}) => {
         }
     }
 
+
     useEffect(() => {
         getQuestion()
+        // if(window.localStorage.getItem("timeRemain") !== null){
+        //     setTimer(Number(window.localStorage.getItem("timeRemain")) + (1000 * 30 * 60))
+        // }else{
+        //     setTimer(Date.now() + (1000 * 30 * 60))
+        // }
+        // countdownTimer.current.start()
+        window.addEventListener("beforeunload", () => {
+            // console.log()
+            // window.localStorage.setItem("timeRemain", +Date.now())
+        })
         // eslint-disable-next-line
     }, [])
 
     useEffect(() => {
-        console.log(answers)
+        // console.log(answers)
     }, [answers])
 
     const updateAnswers = (i, value) => {
@@ -73,12 +90,18 @@ const Quiz = ({user}) => {
                 resultTmp["wrong"]++
             }
         })
-        setResult(resultTmp)
-        // console.log(resultTmp)
+        // setResult(resultTmp)
     }
 
+
+    
+
     return (
-        <Box height={"100vh"} display={"flex"} justifyContent={"center"} alignItems={"center"}>
+        <Box height={"100vh"} display={"flex"} flexDirection={"column"} justifyContent={"center"} alignItems={"center"}>
+            <Box mb={"10px"} fontSize={"24px"} color={"white"} >
+                Time remaining: <Countdown ref={countdownTimer} date={timer} onComplete={checkAnswer} />
+            </Box>
+            
             {questions === null ? (<Box sx={{display: "flex", justifyContent: "center"}}><CircularProgress/></Box>) : (
                 <Question data={questions[activeQuestion]} i={activeQuestion} answer={answers[activeQuestion]} action={{nextQuestion, prevQuestion, updateAnswers}}/>
             )}

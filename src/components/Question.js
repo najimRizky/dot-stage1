@@ -12,7 +12,7 @@ const Question = ({ data, i , action, answer}) => {
     }
 
     useEffect(() => {
-        console.log(data)
+        // console.log(data)
         setCurrAnswer(answer === undefined ? "" : answer)
     }, [data])
 

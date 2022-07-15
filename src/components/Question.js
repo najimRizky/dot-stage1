@@ -7,8 +7,13 @@ const Question = ({ data, i , action, answer}) => {
     const [currAnswer, setCurrAnswer] = useState("")
 
     const submitQuestion = () => {
-        action.updateAnswers(i, currAnswer)
+        action.addAnswers(i, currAnswer)
         action.nextQuestion()
+    }
+
+    const clearCurrentAnswer = () => {
+        action.deleteAnswers(i)
+        setCurrAnswer("")
     }
 
     useEffect(() => {
@@ -17,7 +22,7 @@ const Question = ({ data, i , action, answer}) => {
     }, [data])
 
     return (
-        <Box sx={{ borderRadius: "10px", width: "85vw", height: "85vh", background: "white", overflow: "hidden" }}>
+        <Box sx={{ borderRadius: "10px 10px 0 0", width: "85vw", height: "70vh", background: "white", overflow: "hidden" }}>
             <Box fullWidth sx={{ height: "15%", background: "#104f53", display: "flex", color: "white", alignItems: "center", px: "20px" }}>
                 <Box>
                     <IconButton onClick={action.prevQuestion} disabled={i === 0 ? true : false} sx={{ border: "1px solid rgba(255,255,255,0.5)", color: "white", transform: "rotate(180deg)" }}><ArrowForwardIosIcon /></IconButton>
@@ -43,7 +48,7 @@ const Question = ({ data, i , action, answer}) => {
                     </RadioGroup>
                     <Box mt={"20px"}>
                         <Button disabled={currAnswer === "" ? true : false} variant="contained" onClick={submitQuestion} >Submit</Button>
-                        <Button disabled={currAnswer === "" ? true : false} onClick={() => setCurrAnswer("")} variant="text" >Clear Answer</Button>
+                        <Button disabled={currAnswer === "" ? true : false} onClick={clearCurrentAnswer} variant="text" >Clear Answer</Button>
                     </Box>
 
                 </Container>

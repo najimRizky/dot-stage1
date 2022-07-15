@@ -6,6 +6,7 @@ import Countdown, {calcTimeDelta} from "react-countdown";
 import { connect } from "react-redux";
 import Question from "./Question";
 import { Navigate } from "react-router-dom";
+import QuestionNav from "./QuestionNav";
 
 
 const Quiz = ({user}) => {
@@ -60,11 +61,17 @@ const Quiz = ({user}) => {
     }, [])
 
     useEffect(() => {
-        // console.log(answers)
+        console.log(answers)
     }, [answers])
 
-    const updateAnswers = (i, value) => {
+    const addAnswers = (i, value) => {
         setAnswers({...answers, [i]: value})
+    }
+
+    const deleteAnswers = (i) => {
+        const tmp = {...answers}
+        delete tmp[i]
+        setAnswers(tmp)
     }
 
     const nextQuestion = () => {
@@ -73,6 +80,11 @@ const Quiz = ({user}) => {
 
     const prevQuestion = () => {
         setActiveQuestion(activeQuestion-1)
+    }
+
+    const goToQuestion = (i) => {
+        if(i !== activeQuestion)
+            setActiveQuestion(i)
     }
 
     const checkAnswer = () => {
@@ -103,7 +115,10 @@ const Quiz = ({user}) => {
             </Box>
             
             {questions === null ? (<Box sx={{display: "flex", justifyContent: "center"}}><CircularProgress/></Box>) : (
-                <Question data={questions[activeQuestion]} i={activeQuestion} answer={answers[activeQuestion]} action={{nextQuestion, prevQuestion, updateAnswers}}/>
+                <>
+                    <Question data={questions[activeQuestion]} i={activeQuestion} answer={answers[activeQuestion]} action={{nextQuestion, prevQuestion, addAnswers, deleteAnswers}}/>
+                    <QuestionNav goToQuestion={goToQuestion} answers={answers} active={activeQuestion} total={questions.length}/>
+                </>
             )}
         </Box>
         // <Container sx={{background: "white"}}>

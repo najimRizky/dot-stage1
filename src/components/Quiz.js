@@ -116,6 +116,7 @@ const Quiz = ({ user }) => {
     }
 
     const nextQuestion = () => {
+        if(activeQuestion !== questions.length-1)
         setActiveQuestion(activeQuestion + 1)
     }
 
